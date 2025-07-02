@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本动漫圣地巡礼 - Anime Pilgrimage</title>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="cesiumContainer"></div>
+    
+    <!-- 顶部功能面板 -->
+    <div id="topFunctionPanel">
+        <div class="panel-container">
+            <!-- 3D Tiles模型功能 -->
+            <div class="function-group">
+                <button class="primary-btn" id="tilesModelBtn">
+                    <span class="btn-icon">🏗️</span>
+                    <span class="btn-text">3D Tiles模型</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="tilesModelDropdown">
+                    <button class="secondary-btn" data-tiles-model="chiyoda">
+                        <i class="fas fa-building"></i>
+                        <span class="btn-text">千代田3D Tiles</span>
+                    </button>
+                    <button class="secondary-btn" data-tiles-model="clear">
+                        <i class="fas fa-eraser"></i>
+                        <span class="btn-text">清除模型</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- OSM模型功能 -->
+            <div class="function-group">
+                <button class="primary-btn" id="osmModelBtn">
+                    <span class="btn-icon">🏢</span>
+                    <span class="btn-text">OSM模型</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="osmModelDropdown">
+                    <button class="secondary-btn" data-osm-model="add">
+                        <i class="fas fa-plus"></i>
+                        <span class="btn-text">添加OSM模型</span>
+                    </button>
+                    <button class="secondary-btn" data-osm-model="remove">
+                        <i class="fas fa-minus"></i>
+                        <span class="btn-text">移除OSM模型</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 底图样式功能 -->
+            <div class="function-group">
+                <button class="primary-btn" id="basemapBtn">
+                    <span class="btn-icon">🗺️</span>
+                    <span class="btn-text">底图样式</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="basemapDropdown">
+                    <button class="secondary-btn" data-basemap="terrain">
+                        <i class="fas fa-mountain"></i>
+                        <span class="btn-text">地形</span>
+                    </button>
+                    <button class="secondary-btn" data-basemap="openstreetmap">
+                        <i class="fas fa-map"></i>
+                        <span class="btn-text">OpenStreetMap</span>
+                    </button>
+                    <button class="secondary-btn" data-basemap="stadia-dark">
+                        <i class="fas fa-moon"></i>
+                        <span class="btn-text">Stadia Alidade Smooth Dark</span>
+                    </button>
+
+                    <button class="secondary-btn" data-basemap="stadia-toner">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span class="btn-text">Stadia x Stamen Toner</span>
+                    </button>
+                    <button class="secondary-btn" data-basemap="clear">
+                        <i class="fas fa-eraser"></i>
+                        <span class="btn-text">清除样式</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 空间分析功能 -->
+            <div class="function-group">
+                <button class="primary-btn" id="analysisBtn">
+                    <span class="btn-icon">📐</span>
+                    <span class="btn-text">空间分析</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="analysisDropdown">
+                    <button class="secondary-btn" data-analysis="buffer">
+                        <i class="fas fa-circle"></i>
+                        <span class="btn-text">缓冲区分析</span>
+                    </button>
+                    <button class="secondary-btn" data-analysis="distance">
+                        <i class="fas fa-ruler"></i>
+                        <span class="btn-text">测量距离</span>
+                    </button>
+                    <button class="secondary-btn" data-analysis="area">
+                        <i class="fas fa-vector-square"></i>
+                        <span class="btn-text">面积计算</span>
+                    </button>
+                    <button class="secondary-btn" data-analysis="clear">
+                        <i class="fas fa-eraser"></i>
+                        <span class="btn-text">清除分析</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 相机视角功能 -->
+            <div class="function-group">
+                <button class="primary-btn" id="cameraBtn">
+                    <span class="btn-icon">📷</span>
+                    <span class="btn-text">相机视角</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="cameraDropdown">
+                    <button class="secondary-btn" data-camera="2d">
+                        <i class="fas fa-map"></i>
+                        <span class="btn-text">2D视角</span>
+                    </button>
+                    <button class="secondary-btn" data-camera="2.5d">
+                        <i class="fas fa-cube"></i>
+                        <span class="btn-text">2.5D视角</span>
+                    </button>
+                    <button class="secondary-btn" data-camera="3d">
+                        <i class="fas fa-globe"></i>
+                        <span class="btn-text">3D视角</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 天气模拟功能 -->
+            <div class="function-group">
+                <button class="primary-btn" id="weatherBtn">
+                    <span class="btn-icon">🌤️</span>
+                    <span class="btn-text">天气模拟</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="weatherDropdown">
+                    <button class="secondary-btn" data-weather="rain">
+                        <span class="btn-icon">🌧️</span>
+                        <span class="btn-text">雨天</span>
+                    </button>
+                    <button class="secondary-btn" data-weather="snow">
+                        <span class="btn-icon">❄️</span>
+                        <span class="btn-text">雪天</span>
+                    </button>
+                    <button class="secondary-btn" data-weather="clear">
+                        <span class="btn-icon">☀️</span>
+                        <span class="btn-text">晴天</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 巡礼工具功能 -->
+            <div class="function-group">
+                <button class="primary-btn" id="pilgrimageBtn">
+                    <span class="btn-icon">⭐</span>
+                    <span class="btn-text">巡礼工具</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="pilgrimageDropdown">
+                    <button class="secondary-btn" data-pilgrimage="locations">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span class="btn-text">圣地巡礼地点</span>
+                    </button>
+                    <button class="secondary-btn" data-pilgrimage="favorites">
+                        <i class="fas fa-heart"></i>
+                        <span class="btn-text">地点收藏</span>
+                    </button>
+                    <button class="secondary-btn" data-pilgrimage="notes">
+                        <i class="fas fa-sticky-note"></i>
+                        <span class="btn-text">笔记系统</span>
+                    </button>
+                    <button class="secondary-btn" data-pilgrimage="my-collection">
+                        <i class="fas fa-bookmark"></i>
+                        <span class="btn-text">我的收藏</span>
+                    </button>
+                    <button class="secondary-btn" data-pilgrimage="export">
+                        <i class="fas fa-download"></i>
+                        <span class="btn-text">导出数据</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 巡礼工具面板 -->
+    <div id="pilgrimagePanel" class="pilgrimage-panel" style="display: none;">
+        <div class="panel-header">
+            <h3 id="pilgrimagePanelTitle">巡礼工具</h3>
+            <button id="closePilgrimagePanel" class="close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="panel-content" id="pilgrimagePanelContent">
+            <!-- 动态内容将在这里显示 -->
+        </div>
+    </div>
+    
+    <!-- 侧边栏 -->
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <h2>动漫圣地巡礼</h2>
+            <p>探索日本动漫中的经典场景</p>
+        </div>
+        
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <input type="text" id="searchInput" placeholder="搜索动漫或地点...">
+                <button id="searchBtn">搜索</button>
+            </div>
+            
+            <div class="search-dropdown" id="searchDropdown">
+                <div class="anime-list">
+                    <h3>热门动漫</h3>
+                    <div id="animeList"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="location-info" id="locationInfo" style="display: none;">
+            <h3>地点信息</h3>
+            <div id="locationDetails"></div>
+        </div>
+    </div>
+    
+
+    
+    <!-- 地点信息浮动框 -->
+    <div id="locationTooltip" class="location-tooltip" style="display: none;">
+        <div class="tooltip-content">
+            <button class="tooltip-close" onclick="window.uiManager.hideLocationTooltip()">&times;</button>
+            <div id="tooltipDetails"></div>
+        </div>
+    </div>
+    
+    <!-- 鹰眼地图 -->
+    <div id="hawkEyeMap" class="hawk-eye-map"></div>
+    
+    <!-- 右上角GitHub图标 -->
+    <div id="githubContainer">
+        <a href="https://github.com/SionFelix100/SeiChiJunRei" target="_blank" id="githubLink">
+            <i class="fab fa-github"></i>
+        </a>
+    </div>
+    
+    <!-- 右下角Logo和学号信息 -->
+    <div id="logoContainer">
+        <img src="image/xmut-logo.png" alt="XMUT Logo">
+        <div id="studentInfo">2212001107 张光卫</div>
+    </div>
+    
+    <!-- 加载指示器 -->
+    <div id="loadingIndicator">
+        <div class="spinner"></div>
+        <p>加载中...</p>
+    </div>
+    
+    <script src="js/config.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/viewer.js"></script>
+    <script src="js/locations.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/postProcessController.js"></script>
+    <script src="js/topPanel.js"></script>
+    <script src="js/hawkEyeMap.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
